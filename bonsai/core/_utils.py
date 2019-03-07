@@ -169,3 +169,43 @@ def reconstruct_tree(leaves):
     return tree_ind, tree_val
 
 
+# Node Operations
+def tunnel(node_ind, direction=0):
+    l_child_idx = node_ind[3]  # Left child index
+    r_child_idx = node_ind[4]  # Right child index
+
+    if direction == 0:
+        node_ind[3] = r_child_idx
+    elif direction == 1:
+        node_ind[4] = l_child_idx
+    elif direction == -1:
+        node_ind[3] = r_child_idx
+        node_ind[4] = l_child_idx
+    else:
+        msg = """
+        Tunneling direction is either:
+             0     left to right,
+             1     right to left
+             -1    swap 
+        Did not recognize direction: {}
+        """.format(
+            direction
+        )
+        raise ValueError(msg)
+
+    return node_ind
+
+
+def swap(node_ind):
+    """
+    Just an alias for double tunneling
+
+    Parameters
+    ----------
+    node_ind
+
+    Returns
+    -------
+
+    """
+    return tunnel(node_ind, direction=-1)

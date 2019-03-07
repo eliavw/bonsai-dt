@@ -7,6 +7,11 @@ User need to provide two additional functions to complete the Bonsai class:
 """
 # Authors: Yubin Park <yubin.park@gmail.com>
 # License: Apache License 2.0
+import copy
+import numpy as np
+import json
+from scipy.special import expit
+import time
 
 from bonsai.core._bonsaic import reorder, sketch, apply_tree
 from bonsai.core._utils import (
@@ -15,11 +20,9 @@ from bonsai.core._utils import (
     setup_canvas_na,
     setup_canvas,
     get_child_branch,
+    tunnel,
+    swap,
 )
-import numpy as np
-import json
-from scipy.special import expit
-import time
 
 
 class Bonsai:
@@ -59,6 +62,7 @@ class Bonsai:
                                 float:  Predicted value by this node
 
     """
+
     def __init__(
         self,
         find_split,
@@ -69,9 +73,11 @@ class Bonsai:
         random_state=None,
         z_type="M2",
     ):
-        self.find_split = find_split            # user-defined
-        self.is_leaf = is_leaf                  # user-defined
-        self.randomize_node = randomize_node    # user-defined
+        self.find_split = find_split  # user-defined
+        self.is_leaf = is_leaf  # user-defined
+
+        if randomize_node is not None:  # overwrite if necessary
+            self.randomize_node = randomize_node
 
         self.n_hist_max = n_hist_max
         self.subsample = np.clip(subsample, 0.0, 1.0)
@@ -83,8 +89,15 @@ class Bonsai:
         self.n_features_ = 0
         self.tree_ind = np.zeros((1, 6), dtype=np.int)
         self.tree_val = np.zeros((1, 2), dtype=np.float)
-        self.tree_ind_header = ('is_leaf', 'svar', 'missing', 'l_idx', 'r_idx', 'leaf_idx')
-        self.tree_val_header = ('sval', 'out')
+        self.tree_ind_header = (
+            "is_leaf",
+            "svar",
+            "missing",
+            "l_idx",
+            "r_idx",
+            "leaf_idx",
+        )
+        self.tree_val_header = ("sval", "out")
         self.mask = None
         self.canvas_dim = None
         self.canvas_na = None
@@ -93,62 +106,6 @@ class Bonsai:
         self.counts = None
         self.ratios = None
         return
-
-    def split_branch(self, X, y, z, branch):
-        """Splits the data (X, y) into two children based on 
-           the selected splitting variable and value pair.
-        """
-
-        i_start = branch["i_start"]
-        i_end = branch["i_end"]
-
-        # Get AVC-GROUP
-        avc = sketch(
-            X, y, z, self.canvas, self.canvas_dim, self.canvas_na, i_start, i_end
-        )
-
-        if avc.shape[0] < 2:
-            branch["is_leaf"] = True
-            return [branch]
-
-        # Find a split SS: selected split
-        ss = self.find_split(avc)
-        if not isinstance(ss, dict) or "selected" not in ss:
-            branch["is_leaf"] = True
-            return [branch]
-
-        svar = ss["selected"][1]
-        sval = ss["selected"][2]
-        missing = ss["selected"][9]
-        i_split = reorder(X, y, z, i_start, i_end, svar, sval, missing)
-
-        if i_split == i_start or i_split == i_end:
-            # NOTE: this condition may rarely happen due to
-            #       Python's floating point treatments.
-            #       We just ignore this case, and stop the tree growth
-            branch["is_leaf"] = True
-            return [branch]
-
-        left_branch = get_child_branch(ss, branch, i_split, "@l")
-        left_branch["is_leaf"] = self.is_leaf(left_branch, branch)
-
-        right_branch = get_child_branch(ss, branch, i_split, "@r")
-        right_branch["is_leaf"] = self.is_leaf(right_branch, branch)
-
-        return [left_branch, right_branch]
-
-    def grow_tree(self, X, y, z, branches):
-        """Grows a tree by recursively partitioning the data (X, y)."""
-
-        branches_new = []
-        leaves_new = []
-        for branch in branches:
-            for child in self.split_branch(X, y, z, branch):
-                if child["is_leaf"]:
-                    leaves_new.append(child)
-                else:
-                    branches_new.append(child)
-        return branches_new, leaves_new
 
     def fit(self, X, y, init_canvas=True):
         """Fit a tree to the data (X, y)."""
@@ -216,6 +173,64 @@ class Bonsai:
         out = apply_tree(self.tree_ind, self.tree_val, X, y, output_type)
         return out
 
+    # Fitting
+    def split_branch(self, X, y, z, branch):
+        """Splits the data (X, y) into two children based on 
+           the selected splitting variable and value pair.
+        """
+
+        i_start = branch["i_start"]
+        i_end = branch["i_end"]
+
+        # Get AVC-GROUP
+        avc = sketch(
+            X, y, z, self.canvas, self.canvas_dim, self.canvas_na, i_start, i_end
+        )
+
+        if avc.shape[0] < 2:
+            branch["is_leaf"] = True
+            return [branch]
+
+        # Find a split SS: selected split
+        ss = self.find_split(avc)
+        if not isinstance(ss, dict) or "selected" not in ss:
+            branch["is_leaf"] = True
+            return [branch]
+
+        svar = ss["selected"][1]
+        sval = ss["selected"][2]
+        missing = ss["selected"][9]
+        i_split = reorder(X, y, z, i_start, i_end, svar, sval, missing)
+
+        if i_split == i_start or i_split == i_end:
+            # NOTE: this condition may rarely happen due to
+            #       Python's floating point treatments.
+            #       We just ignore this case, and stop the tree growth
+            branch["is_leaf"] = True
+            return [branch]
+
+        left_branch = get_child_branch(ss, branch, i_split, "@l")
+        left_branch["is_leaf"] = self.is_leaf(left_branch, branch)
+
+        right_branch = get_child_branch(ss, branch, i_split, "@r")
+        right_branch["is_leaf"] = self.is_leaf(right_branch, branch)
+
+        return [left_branch, right_branch]
+
+    def grow_tree(self, X, y, z, branches):
+        """Grows a tree by recursively partitioning the data (X, y)."""
+
+        branches_new = []
+        leaves_new = []
+        for branch in branches:
+            for child in self.split_branch(X, y, z, branch):
+                if child["is_leaf"]:
+                    leaves_new.append(child)
+                else:
+                    branches_new.append(child)
+        return branches_new, leaves_new
+
+    # Canvas
     def init_canvas(self, X):
         self.canvas_dim = get_canvas_dim(X, self.n_hist_max)
         self.canvas = setup_canvas(self.canvas_dim)
@@ -247,8 +262,12 @@ class Bonsai:
         """
         return self.tree_ind, self.tree_val
 
-    def dump(self, columns=[]):
+    # Load-Save
+    def dump(self, columns=None):
         """Dumps the trained tree in the form of array of leaves"""
+
+        if columns is None:
+            columns = []
 
         def default(o):
             if isinstance(o, np.int64):
@@ -262,7 +281,7 @@ class Bonsai:
                     eq["name"] = columns[int(eq["svar"])]
         return json.loads(json.dumps(self.leaves, default=default))
 
-    def load(self, leaves, columns=None):
+    def load(self, leaves):
         """Loads a new tree in the form of array of leaves"""
         self.leaves = leaves
         self.tree_ind, self.tree_val = reconstruct_tree(self.leaves)
@@ -301,6 +320,7 @@ class Bonsai:
                 sibling_pairs.append((id2index[leaf_id], None))
         return sibling_pairs
 
+    # Calculate quantities
     def get_feature_importances(self):
         return self.feature_importances_
 
@@ -327,7 +347,7 @@ class Bonsai:
         self.feature_importances_ /= cov
         return self.feature_importances_
 
-    def calculate_counts(self):
+    def get_counts(self, persist=True):
         """
         See how many samples are sent left and right by a node.
 
@@ -347,14 +367,19 @@ class Bonsai:
                 counts[node_idx, 1] = -1
                 counts[node_idx, 2] = -1
             else:
-                counts[node_idx, 1] = self.count_samples_node(self.tree_ind[node_idx][3])
-                counts[node_idx, 2] = self.count_samples_node(self.tree_ind[node_idx][4])
+                counts[node_idx, 1] = self.count_samples_node(
+                    self.tree_ind[node_idx][3]
+                )
+                counts[node_idx, 2] = self.count_samples_node(
+                    self.tree_ind[node_idx][4]
+                )
                 counts[node_idx, 0] = counts[node_idx, 1] + counts[node_idx, 2]
 
-        self.counts = counts
-        return
+        if persist:
+            self.counts = counts
+        return counts
 
-    def calculate_ratios(self):
+    def get_ratios(self, persist=True):
         """
         Calculate the ratio between samples sent left and right by a dnode
 
@@ -366,7 +391,7 @@ class Bonsai:
         n, _ = self.tree_ind.shape
         ratios = np.zeros((n, 2), dtype=float)
 
-        assert self.counts is not None # You first have to have counts.
+        assert self.counts is not None  # You first have to have counts.
 
         for node_idx in range(n):
             leaf = self.check_leaf(node_idx)
@@ -380,9 +405,36 @@ class Bonsai:
                 ratios[node_idx, 0] = counts[1] / n_samples
                 ratios[node_idx, 1] = counts[2] / n_samples
 
-        self.ratios = ratios
+        if persist:
+            self.ratios = ratios
+        return ratios
 
-        return
+    # Randomize tree
+    def randomize_tree(self):
+
+        if self.counts is None:
+            self.get_counts()
+            self.get_ratios()
+        tree = copy.deepcopy(self)
+        n, _ = tree.tree_ind.shape
+        random_samples = self.swap_distribution_samples(n)
+
+        # Filter leaves
+        internal_nodes = [node_idx for node_idx in range(n)
+                          if tree.tree_ind[node_idx][0] != 1]
+
+        l_ratios = tree.ratios[:, 0]
+
+        # Iterate over all nodes, swap if you must
+        for node_idx in internal_nodes:
+            s = random_samples[node_idx]
+            d = 0.5-l_ratios[node_idx]
+            must_swap = np.abs(s) > np.abs(d)
+
+            if must_swap:
+                tree.tree_ind[node_idx] = swap(tree.tree_ind[node_idx])
+
+        return tree
 
     # Helpers
     def check_leaf(self, node_idx):
@@ -402,11 +454,15 @@ class Bonsai:
         if is_leaf(node_idx):
             leaf_idx = tree_ind[node_idx][5]
             leaf = leaves[leaf_idx]
-            return leaf['n_samples']
+            return leaf["n_samples"]
 
         else:
             l_idx = tree_ind[node_idx][3]
             r_idx = tree_ind[node_idx][4]
             return self.count_samples_node(l_idx) + self.count_samples_node(r_idx)
 
-
+    @staticmethod
+    def swap_distribution_samples(n, mu=0.5, sigma=0.05):
+        random_samples = np.random.normal(mu, sigma, n)
+        random_samples = np.round(random_samples, decimals=0)
+        return random_samples
