@@ -4,6 +4,8 @@ build/
 dist/
 *.egg-info
 
+*.idea
+
 # Compiled source #
 ###################
 *.com
