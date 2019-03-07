@@ -196,7 +196,7 @@ cdef np.ndarray[DTYPE_t, ndim=1] _apply_tree0(
                             np.ndarray[DTYPE_t, ndim=2] tree_val, 
                             np.ndarray[DTYPE_t, ndim=2] X, 
                             np.ndarray[DTYPE_t, ndim=1] y):
-    # Initialize node/row indicies
+    # Initialize node/row indices
     cdef size_t i, t
     cdef size_t n_samples = X.shape[0]
 
@@ -219,21 +219,40 @@ cdef np.ndarray[DTYPE_t, ndim=1] _apply_tree0(
 
 # output y values
 cdef np.ndarray[DTYPE_t, ndim=1] _apply_tree1(
-                            np.ndarray[np.int_t, ndim=2] tree_ind, 
-                            np.ndarray[DTYPE_t, ndim=2] tree_val, 
-                            np.ndarray[DTYPE_t, ndim=2] X, 
-                            np.ndarray[DTYPE_t, ndim=1] y):
-    # Initialize node/row indicies
+        np.ndarray[np.int_t, ndim=2] tree_ind,
+        np.ndarray[DTYPE_t, ndim=2] tree_val,
+        np.ndarray[DTYPE_t, ndim=2] X,
+        np.ndarray[DTYPE_t, ndim=1] y):
+    """
+    This is the standard prediction function.
+    
+    Pushes a sample through the tree and returns its value in the end.
+    
+    Parameters
+    ----------
+    tree_ind
+    tree_val
+    X
+    y
+
+    Returns
+    -------
+
+    """
+
+    # Initialize node/row indices
     cdef size_t i, t
     cdef size_t n_samples = X.shape[0]
 
     with nogil:
+
         for i in range(n_samples):
-            t = 0
+
+            t = 0 # Start at root node.
             while tree_ind[t,0] < 0:
                 if isnan(X[i, tree_ind[t,1]]):
                     if tree_ind[t,2]==0:
-                        t = tree_ind[t,3] 
+                        t = tree_ind[t,3]
                     else:
                         t = tree_ind[t,4] 
                 else:
@@ -242,6 +261,7 @@ cdef np.ndarray[DTYPE_t, ndim=1] _apply_tree1(
                     else:
                         t = tree_ind[t,4]
             y[i] = tree_val[t,1]
+
     return y
 
 

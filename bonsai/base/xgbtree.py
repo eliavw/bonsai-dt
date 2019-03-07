@@ -9,18 +9,21 @@ This class implements the XGBoost base tree that appeared in:
 from bonsai.core.bonsaic import Bonsai
 import numpy as np
 
+
 class XGBTree(Bonsai):
-    def __init__(self, 
-                max_depth=5, 
-                min_samples_split=2,
-                min_samples_leaf=1,
-                subsample=1.0,
-                reg_lambda=0.1,            # regularization
-                random_state=1234,
-                distribution="gaussian",
-                **kwarg):
-        
-        self.max_depth=max_depth
+    def __init__(
+        self,
+        max_depth=5,
+        min_samples_split=2,
+        min_samples_leaf=1,
+        subsample=1.0,
+        reg_lambda=0.1,  # regularization
+        random_state=1234,
+        distribution="gaussian",
+        **kwarg
+    ):
+
+        self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
         self.reg_lambda = reg_lambda
@@ -32,49 +35,55 @@ class XGBTree(Bonsai):
                 return None
 
             valid_splits = np.logical_and(
-                            avc[:,3] > self.min_samples_leaf,
-                            avc[:,6] > self.min_samples_leaf)
-            avc = avc[valid_splits,:]
+                avc[:, 3] > self.min_samples_leaf, avc[:, 6] > self.min_samples_leaf
+            )
+            avc = avc[valid_splits, :]
 
             if avc.shape[0] == 0:
                 return None
 
-            if self.distribution=="bernoulli":
-                h_l = avc[:,5] 
-                h_r = avc[:,8]
-            else: 
-                h_l = avc[:,3]
-                h_r = avc[:,6]
-            g_l = avc[:,4] 
-            g_r = avc[:,7] 
-            obj = g_l*g_l/(h_l+self.reg_lambda) 
-            obj = obj + g_r*g_r/(h_r+self.reg_lambda)
+            if self.distribution == "bernoulli":
+                h_l = avc[:, 5]
+                h_r = avc[:, 8]
+            else:
+                h_l = avc[:, 3]
+                h_r = avc[:, 6]
+            g_l = avc[:, 4]
+            g_r = avc[:, 7]
+            obj = g_l * g_l / (h_l + self.reg_lambda)
+            obj = obj + g_r * g_r / (h_r + self.reg_lambda)
 
-            y_l = g_l/(h_l+self.reg_lambda)
-            y_r = g_r/(h_r+self.reg_lambda)
+            y_l = g_l / (h_l + self.reg_lambda)
+            y_r = g_r / (h_r + self.reg_lambda)
 
             best_idx = np.argsort(obj)[-1]
 
-            ss = {"selected": avc[best_idx,:],
-                  "y@l": y_l[best_idx],
-                  "y@r": y_r[best_idx]}
+            ss = {
+                "selected": avc[best_idx, :],
+                "y@l": y_l[best_idx],
+                "y@r": y_r[best_idx],
+            }
 
             return ss
 
         def is_leaf(branch, branch_parent):
 
-            if (branch["depth"] >= self.max_depth or 
-                branch["n_samples"] < self.min_samples_split):
+            if (
+                branch["depth"] >= self.max_depth
+                or branch["n_samples"] < self.min_samples_split
+            ):
                 return True
             else:
                 return False
 
-        Bonsai.__init__(self, 
-                        find_split, 
-                        is_leaf,
-                        subsample=subsample, 
-                        random_state=random_state,
-                        z_type="Hessian")
+        Bonsai.__init__(
+            self,
+            find_split,
+            is_leaf,
+            subsample=subsample,
+            random_state=random_state,
+            z_type="Hessian",
+        )
 
     def prune(self, X, y, y_hat, nu, max_iter=1):
 
@@ -84,17 +93,16 @@ class XGBTree(Bonsai):
 
         def loss(y, y_hat):
             if self.distribution == "gaussian":
-                return np.mean((y-y_hat)**2)
+                return np.mean((y - y_hat) ** 2)
             elif self.distribution == "bernoulli":
-                return np.mean(-2.0*(y*y_hat - np.logaddexp(0.0, y_hat)))
+                return np.mean(-2.0 * (y * y_hat - np.logaddexp(0.0, y_hat)))
             else:
-                return np.mean((y-y_hat)**2)
+                return np.mean((y - y_hat) ** 2)
 
         def merge_nodes(leaf_j, leaf_k):
             leaf = leaf_j.copy()
-            leaf["i_start"] = np.min([leaf_j["i_start"], 
-                                        leaf_k["i_start"]])   
-            leaf["i_end"] = np.max([leaf_j["i_end"], leaf_k["i_end"]]) 
+            leaf["i_start"] = np.min([leaf_j["i_start"], leaf_k["i_start"]])
+            leaf["i_end"] = np.max([leaf_j["i_end"], leaf_k["i_end"]])
             leaf["_id"] = "::".join(leaf["_id"].split("::")[:-1])
             leaf["eqs"] = leaf["eqs"][:-1]
             leaf["depth"] = leaf["depth"] - 1
@@ -128,18 +136,17 @@ class XGBTree(Bonsai):
                 if k is None:
                     leaves_new.append(leaves[j])
                     continue
-               
-                if (leaves[j]["prune_status"]==1 and
-                    leaves[k]["prune_status"]==1):
+
+                if leaves[j]["prune_status"] == 1 and leaves[k]["prune_status"] == 1:
                     continue
 
-                mask_j = np.logical_and((t==j), oob_mask)
-                mask_k = np.logical_and((t==k), oob_mask)
+                mask_j = np.logical_and((t == j), oob_mask)
+                mask_k = np.logical_and((t == k), oob_mask)
                 gamma_j = leaves[j]["y"]
                 gamma_k = leaves[k]["y"]
 
                 do_merge = False
-                if (np.sum(mask_j) == 0 or np.sum(mask_k) == 0):
+                if np.sum(mask_j) == 0 or np.sum(mask_k) == 0:
                     do_merge = True
                 else:
                     y_j = y[mask_j]
@@ -158,10 +165,10 @@ class XGBTree(Bonsai):
                     leaf_m = merge_nodes(leaves[j], leaves[k])
                     mask_m = np.logical_or(mask_j, mask_k)
                     if np.sum(mask_m) > 0:
-                        gamma_m = leaf_m["y"] 
+                        gamma_m = leaf_m["y"]
                         y_m = y[mask_m]
                         y_hat_m = y_hat[mask_m]
-                        y_hat_m_new = y_hat_m + gamma_m*nu
+                        y_hat_m_new = y_hat_m + gamma_m * nu
                         if loss(y_m, y_hat_m) > loss(y_m, y_hat_m_new):
                             leaf_m["prune_status"] = 1
                     leaves_new.append(leaf_m)
@@ -172,9 +179,9 @@ class XGBTree(Bonsai):
                     leaves_new.append(leaves[k])
 
             for i, leaf in enumerate(leaves_new):
-                leaf["index"] = i 
+                leaf["index"] = i
 
-            self.load(leaves_new) 
+            self.load(leaves_new)
 
             pruned = np.sum([leaf["prune_status"] for leaf in leaves_new])
 
@@ -192,4 +199,3 @@ class XGBTree(Bonsai):
                 do_pruning = False
 
         # DONE PRUNING
-

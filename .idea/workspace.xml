@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="53630f5a-9c23-4a50-b297-c66baf1b2ad7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/alphatree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/alphatree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/c45tree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/c45tree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/friedmantree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/friedmantree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/ginitree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/ginitree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/regtree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/regtree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/base/xgbtree.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/base/xgbtree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/core/_bonsaic.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/core/_bonsaic.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/core/_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/core/_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/core/bonsaic.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/core/bonsaic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/ensemble/gbm.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/ensemble/gbm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/ensemble/paloboost.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/ensemble/paloboost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bonsai/ensemble/randomforests.py" beforeDir="false" afterPath="$PROJECT_DIR$/bonsai/ensemble/randomforests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/research/eval_paloboost_ca6hr.py" beforeDir="false" afterPath="$PROJECT_DIR$/research/eval_paloboost_ca6hr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/research/eval_paloboost_los.py" beforeDir="false" afterPath="$PROJECT_DIR$/research/eval_paloboost_los.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/research/eval_paloboost_mort.py" beforeDir="false" afterPath="$PROJECT_DIR$/research/eval_paloboost_mort.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/research/eval_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/research/eval_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/research/preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/research/preprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/alphatree.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/alphatree.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/dump.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/dump.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/gbm.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/gbm.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/missing.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/missing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/paloboost.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/paloboost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/predict.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/randomforests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/randomforests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/regtree.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/regtree.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bonsai/core/bonsaic.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="375" column="20" lean-forward="true" selection-start-line="375" selection-start-column="20" selection-end-line="375" selection-end-column="20" />
+              <folding>
+                <element signature="e#325#385#0" expanded="true" />
+                <element signature="e#2559#3439#0" expanded="true" />
+                <element signature="e#11579#12063#0" expanded="true" />
+                <element signature="e#11569#11690#1" />
+                <element signature="e#11511#11549#0" expanded="true" />
+                <element signature="e#11847#11853#0" expanded="true" />
+                <element signature="e#12008#12041#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/base/c45tree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#329#528#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/base/friedmantree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+              <folding>
+                <element signature="e#741#1423#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/base/regtree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+              <folding>
+                <element signature="e#710#1678#0" expanded="true" />
+                <element signature="e#1737#2172#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/core/_utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="170" selection-start-line="170" selection-end-line="170" />
+              <folding>
+                <element signature="e#0#140#1" />
+                <element signature="e#142#186#0" />
+                <element signature="e#702#1094#0" />
+                <element signature="e#905#1084#0" />
+                <element signature="e#1113#1523#0" />
+                <element signature="e#1314#1494#0" />
+                <element signature="e#1789#1904#0" />
+                <element signature="e#2499#2935#0" />
+                <element signature="e#2700#2935#0" />
+                <element signature="e#3232#3698#0" />
+                <element signature="e#3813#3877#0" />
+                <element signature="e#4080#4881#0" />
+                <element signature="e#4202#4809#0" />
+                <element signature="e#4550#4722#0" />
+                <element signature="e#5103#5212#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/ensemble/gbm.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/ensemble/randomforests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="342">
+              <caret line="45" column="31" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="31" />
+              <folding>
+                <element signature="e#533#1112#0" expanded="true" />
+                <element signature="e#1148#1347#0" expanded="true" />
+                <element signature="e#1389#1454#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/base/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="95">
+              <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bonsai/core/_bonsaic.pyx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4199">
+              <caret line="224" column="39" selection-start-line="224" selection-start-column="39" selection-end-line="224" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>subsample</find>
+      <find>stochastic</find>
+      <find>ttab</find>
+      <find>tree_ind</find>
+      <find>abs</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/bonsai/base/__init__.py" />
+        <option value="$PROJECT_DIR$/bonsai/core/_bonsaic.pyx" />
+        <option value="$PROJECT_DIR$/bonsai/core/_utils.py" />
+        <option value="$PROJECT_DIR$/bonsai/core/bonsaic.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1920" />
+    <option name="y" value="-4" />
+    <option name="width" value="1920" />
+    <option name="height" value="1084" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="bonsai-dt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bonsai-dt" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bonsai-dt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bonsai-dt" type="462c0819:PsiDirectoryNode" />
+              <item name="bonsai" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bonsai-dt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bonsai-dt" type="462c0819:PsiDirectoryNode" />
+              <item name="bonsai" type="462c0819:PsiDirectoryNode" />
+              <item name="base" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bonsai-dt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bonsai-dt" type="462c0819:PsiDirectoryNode" />
+              <item name="bonsai" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bonsai-dt" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bonsai-dt" type="462c0819:PsiDirectoryNode" />
+              <item name="bonsai" type="462c0819:PsiDirectoryNode" />
+              <item name="ensemble" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="53630f5a-9c23-4a50-b297-c66baf1b2ad7" name="Default Changelist" comment="" />
+      <created>1551870146866</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1551870146866</updated>
+      <workItem from="1551870148896" duration="12116000" />
+      <workItem from="1551963758146" duration="3032000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="15148000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1919" y="-11" width="1922" height="1092" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18303095" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32903865" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info anchor="right" id="Database" order="4" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/bonsai/core/_bonsaic.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/base/c45tree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#329#528#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/base/friedmantree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+          <folding>
+            <element signature="e#741#1423#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/base/regtree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+          <folding>
+            <element signature="e#710#1678#0" expanded="true" />
+            <element signature="e#1737#2172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/ensemble/gbm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/ensemble/randomforests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="45" column="31" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="31" />
+          <folding>
+            <element signature="e#533#1112#0" expanded="true" />
+            <element signature="e#1148#1347#0" expanded="true" />
+            <element signature="e#1389#1454#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/base/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/core/_bonsaic.pyx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4199">
+          <caret line="224" column="39" selection-start-line="224" selection-start-column="39" selection-end-line="224" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/core/_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="170" selection-start-line="170" selection-end-line="170" />
+          <folding>
+            <element signature="e#0#140#1" />
+            <element signature="e#142#186#0" />
+            <element signature="e#702#1094#0" />
+            <element signature="e#905#1084#0" />
+            <element signature="e#1113#1523#0" />
+            <element signature="e#1314#1494#0" />
+            <element signature="e#1789#1904#0" />
+            <element signature="e#2499#2935#0" />
+            <element signature="e#2700#2935#0" />
+            <element signature="e#3232#3698#0" />
+            <element signature="e#3813#3877#0" />
+            <element signature="e#4080#4881#0" />
+            <element signature="e#4202#4809#0" />
+            <element signature="e#4550#4722#0" />
+            <element signature="e#5103#5212#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bonsai/core/bonsaic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="375" column="20" lean-forward="true" selection-start-line="375" selection-start-column="20" selection-end-line="375" selection-end-column="20" />
+          <folding>
+            <element signature="e#325#385#0" expanded="true" />
+            <element signature="e#2559#3439#0" expanded="true" />
+            <element signature="e#11579#12063#0" expanded="true" />
+            <element signature="e#11569#11690#1" />
+            <element signature="e#11511#11549#0" expanded="true" />
+            <element signature="e#11847#11853#0" expanded="true" />
+            <element signature="e#12008#12041#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

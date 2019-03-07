@@ -15,20 +15,24 @@ import time
 
 PRECISION = 1e-5
 
-class GBM():
 
-    def __init__(self,
-                distribution="gaussian",
-                subsample=0.7,
-                max_depth=3,
-                learning_rate=0.1,
-                n_estimators=100,
-                reg_lambda=0.1,
-                random_state=0):
+class GBM:
+    def __init__(
+        self,
+        distribution="gaussian",
+        subsample=0.7,
+        max_depth=3,
+        learning_rate=0.1,
+        n_estimators=100,
+        reg_lambda=0.1,
+        random_state=0,
+    ):
         self.base_estimator = FriedmanTree
-        self.base_params = {"subsample": subsample,
-                            "max_depth": max_depth,
-                            "random_state": random_state}
+        self.base_params = {
+            "subsample": subsample,
+            "max_depth": max_depth,
+            "random_state": random_state,
+        }
         self.distribution = distribution
         self.nu = learning_rate
         self.n_estimators = n_estimators
@@ -39,12 +43,11 @@ class GBM():
         self.n_features_ = 0
 
     def fit(self, X, y):
-
         def initialize(y):
             if self.distribution == "gaussian":
                 return np.mean(y)
             elif self.distribution == "bernoulli":
-                p = np.clip(np.mean(y), PRECISION, 1-PRECISION)
+                p = np.clip(np.mean(y), PRECISION, 1 - PRECISION)
                 return np.log(p / (1.0 - p))
             else:
                 return np.mean(y)
@@ -58,15 +61,15 @@ class GBM():
                 return y - y_hat
 
         def estimate_gamma(y, y_hat):
-            if self.distribution == "gaussian": 
-                return np.mean(y-y_hat)
+            if self.distribution == "gaussian":
+                return np.mean(y - y_hat)
             elif self.distribution == "bernoulli":
                 p = expit(y_hat)
-                num = np.sum(y-p)
-                denom = np.sum(p * (1-p)) + self.reg_lambda
+                num = np.sum(y - p)
+                denom = np.sum(p * (1 - p)) + self.reg_lambda
                 return num / denom
             else:
-                return np.mean(y-y_hat)
+                return np.mean(y - y_hat)
 
         self.estimators = []
 
@@ -74,8 +77,8 @@ class GBM():
         y = y.astype(np.float)
         if "random_state" not in self.base_params:
             self.base_params["random_state"] = 0
- 
-        n, m = X.shape 
+
+        n, m = X.shape
         self.intercept = initialize(y)
         self.n_features_ = m
         self.feature_importances_ = np.zeros(m)
@@ -87,7 +90,7 @@ class GBM():
         for i in range(self.n_estimators):
             self.base_params["random_state"] += 1
             z = gradient(y, y_hat)
- 
+
             estimator = self.base_estimator(**self.base_params)
             estimator.set_canvas(canvas_dim, canvas)
 
@@ -99,7 +102,7 @@ class GBM():
             leaves = estimator.dump()
 
             for j, leaf in enumerate(leaves):
-                leaf_mask = (t==j)
+                leaf_mask = t == j
                 mask_j = np.logical_and(leaf_mask, ~oob_mask)
                 gamma_j = estimate_gamma(y[mask_j], y_hat[mask_j])
                 leaf["_y"] = leaf["y"]
@@ -117,16 +120,16 @@ class GBM():
     def predict(self, X):
 
         n, m = X.shape
-        y_hat = np.full(n, self.intercept) 
+        y_hat = np.full(n, self.intercept)
 
         for estimator in self.estimators:
-            y_hat += estimator.predict(X) 
+            y_hat += estimator.predict(X)
 
         if self.distribution == "bernoulli":
             y_hat = expit(y_hat)
-            y_mat = np.zeros((y_hat.shape[0], 2)) 
-            y_mat[:,0] = 1.0 - y_hat
-            y_mat[:,1] = y_hat
+            y_mat = np.zeros((y_hat.shape[0], 2))
+            y_mat[:, 0] = 1.0 - y_hat
+            y_mat[:, 1] = y_hat
             return y_mat
         else:
             return y_hat
@@ -140,40 +143,31 @@ class GBM():
     def staged_predict_proba(self, X):
 
         n, m = X.shape
-        y_hat = np.full(n, self.intercept) 
+        y_hat = np.full(n, self.intercept)
 
         for stage, estimator in enumerate(self.estimators):
-            y_hat += estimator.predict(X)    
+            y_hat += estimator.predict(X)
             if self.distribution == "bernoulli":
-                y_mat = np.zeros((y_hat.shape[0], 2)) 
-                y_mat[:,1] = expit(y_hat)
-                y_mat[:,0] = 1.0 - y_mat[:,1]
+                y_mat = np.zeros((y_hat.shape[0], 2))
+                y_mat[:, 1] = expit(y_hat)
+                y_mat[:, 0] = 1.0 - y_mat[:, 1]
                 yield y_mat
             else:
-                yield y_hat 
+                yield y_hat
 
     def update_feature_importances(self):
-        fi = np.zeros(self.n_features_)        
+        fi = np.zeros(self.n_features_)
         for est in self.estimators:
             fi += est.get_feature_importances()
         self.feature_importances_ = fi
         return self.feature_importances_
 
     def get_staged_feature_importances(self):
-        fi = np.zeros(self.n_features_)        
+        fi = np.zeros(self.n_features_)
         for i, est in enumerate(self.estimators):
             fi += est.get_feature_importances()
             yield fi
 
-    def dump(self, columns=[]): 
-        estimators = [estimator.dump(columns)
-                        for estimator in self.estimators]
-        return {"intercept": self.intercept, 
-                "estimators": estimators}
-    
-    
-
-
-
-
-
+    def dump(self, columns=[]):
+        estimators = [estimator.dump(columns) for estimator in self.estimators]
+        return {"intercept": self.intercept, "estimators": estimators}

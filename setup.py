@@ -16,23 +16,26 @@ LICENSE = "Apache 2.0"
 SRC_DIR = "bonsai"
 PACKAGES = [SRC_DIR]
 
-ext_1 = Extension(SRC_DIR + ".core._bonsaic",
-                  [SRC_DIR + "/core/_bonsaic.pyx"],
-                  libraries=[],
-                  include_dirs=[np.get_include()])
+ext_1 = Extension(
+    SRC_DIR + ".core._bonsaic",
+    [SRC_DIR + "/core/_bonsaic.pyx"],
+    libraries=[],
+    include_dirs=[np.get_include()],
+)
 EXTENSIONS = [ext_1]
 
 if __name__ == "__main__":
-    setup(install_requires=REQUIRES,
-          packages=PACKAGES,
-          zip_safe=False,
-          name=NAME,
-          version=VERSION,
-          description=DESCR,
-          author=AUTHOR,
-          author_email=EMAIL,
-          url=URL,
-          license=LICENSE,
-          cmdclass={"build_ext": build_ext},
-          ext_modules=EXTENSIONS
-          )
+    setup(
+        install_requires=REQUIRES,
+        packages=PACKAGES,
+        zip_safe=False,
+        name=NAME,
+        version=VERSION,
+        description=DESCR,
+        author=AUTHOR,
+        author_email=EMAIL,
+        url=URL,
+        license=LICENSE,
+        cmdclass={"build_ext": build_ext},
+        ext_modules=EXTENSIONS,
+    )

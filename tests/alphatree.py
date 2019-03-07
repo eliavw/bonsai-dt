@@ -11,25 +11,26 @@ from sklearn.metrics import roc_auc_score
 import numpy as np
 import time
 
+
 def test():
 
-    X, y = make_hastie_10_2(n_samples=100000) 
-    y[y==-1.0] = 0.0        # AlphaTree accepts [0, 1] not [-1, 1]
+    X, y = make_hastie_10_2(n_samples=100000)
+    y[y == -1.0] = 0.0  # AlphaTree accepts [0, 1] not [-1, 1]
     n, m = X.shape
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                            test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    models = {"alpha_1-c45": C45Tree(max_depth=10),
-            "alpha_2-cart": GiniTree(max_depth=10),
-            "alpha_3": AlphaTree(alpha=3.0, max_depth=10),
-            "sklearn": DecisionTreeClassifier(max_depth=10)}
+    models = {
+        "alpha_1-c45": C45Tree(max_depth=10),
+        "alpha_2-cart": GiniTree(max_depth=10),
+        "alpha_3": AlphaTree(alpha=3.0, max_depth=10),
+        "sklearn": DecisionTreeClassifier(max_depth=10),
+    }
 
     print("\n")
     print("-----------------------------------------------------")
     print(" model_name     train_time     predict_time   auc    ")
     print("-----------------------------------------------------")
-    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format(
-            "baseline", "-", "-", 0.5))
+    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format("baseline", "-", "-", 0.5))
 
     for name, model in models.items():
 
@@ -45,15 +46,16 @@ def test():
 
         # Error
         auc = roc_auc_score(y_test, y_hat)
-        print(" {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
-            name, time_fit, time_pred, auc))
+        print(
+            " {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
+                name, time_fit, time_pred, auc
+            )
+        )
 
     print("-----------------------------------------------------")
     print("\n")
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     test()
-
-

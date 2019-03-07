@@ -9,12 +9,9 @@ This class implements RandomForests:
 from bonsai.base.regtree import RegTree
 import numpy as np
 
-class RandomForests():
 
-    def __init__(self,
-                base_estimator,
-                base_params,
-                n_estimators=100):
+class RandomForests:
+    def __init__(self, base_estimator, base_params, n_estimators=100):
         self.base_estimator = base_estimator
         self.base_params = base_params.copy()
         self.n_estimators = n_estimators
@@ -26,7 +23,7 @@ class RandomForests():
         y = y.astype(np.float)
         if "random_state" not in self.base_params:
             self.base_params["random_state"] = 1
- 
+
         bonsai_tmp = RegTree()
         bonsai_tmp.init_canvas(X)
         canvas_dim, canvas = bonsai_tmp.get_canvas()
@@ -39,19 +36,12 @@ class RandomForests():
 
     def predict(self, X):
         n, m = X.shape
-        y_hat = np.zeros(n) 
+        y_hat = np.zeros(n)
         k = len(self.estimators)
         for estimator in self.estimators:
-            y_hat += estimator.predict(X) 
+            y_hat += estimator.predict(X)
         y_hat /= k
         return y_hat
 
-    def dump(self, columns=[]): 
-        return [estimator.dump(columns) 
-                for estimator in self.estimators]
-      
-
-
-
-
-
+    def dump(self, columns=[]):
+        return [estimator.dump(columns) for estimator in self.estimators]

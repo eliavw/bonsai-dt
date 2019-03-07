@@ -13,28 +13,29 @@ import time
 
 def test():
 
-    X, y = make_friedman1(n_samples=100000) 
-    #X, y = make_friedman2(n_samples=100000) 
-    #X, y = make_friedman3(n_samples=100000) 
+    X, y = make_friedman1(n_samples=100000)
+    # X, y = make_friedman2(n_samples=100000)
+    # X, y = make_friedman3(n_samples=100000)
     n, m = X.shape
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                            test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    reg_params = {"subsample": 0.9, 
-                    "max_depth": 4}
-    models = {"bonsai-rf": RandomForests(base_estimator=RegTree,
-                            base_params=reg_params,
-                            n_estimators=20),
-            "sklearn": RandomForestRegressor(
-                        n_estimators=20, 
-                        max_depth=4)}
+    reg_params = {"subsample": 0.9, "max_depth": 4}
+    models = {
+        "bonsai-rf": RandomForests(
+            base_estimator=RegTree, base_params=reg_params, n_estimators=20
+        ),
+        "sklearn": RandomForestRegressor(n_estimators=20, max_depth=4),
+    }
 
     print("\n")
     print("-----------------------------------------------------")
     print(" model_name     train_time     predict_time   rmse   ")
     print("-----------------------------------------------------")
-    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format(
-            "baseline", "-", "-", np.std(y_test)))
+    print(
+        " {0:12}   {1:12}   {2:12}   {3:.5f}".format(
+            "baseline", "-", "-", np.std(y_test)
+        )
+    )
 
     for name, model in models.items():
 
@@ -49,16 +50,18 @@ def test():
         time_pred = time.time() - start
 
         # Error
-        rmse = np.sqrt(np.mean((y_test - y_hat)**2))
+        rmse = np.sqrt(np.mean((y_test - y_hat) ** 2))
 
-        print(" {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
-            name, time_fit, time_pred, rmse))
+        print(
+            " {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
+                name, time_fit, time_pred, rmse
+            )
+        )
 
     print("-----------------------------------------------------")
     print("\n")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
 
     test()
-
-

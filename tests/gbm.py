@@ -16,31 +16,35 @@ import time
 
 def test_regression():
 
-    X, y = make_friedman1(n_samples=100000, noise=1.0) 
-    #X, y = make_friedman2(n_samples=100000) 
-    #X, y = make_friedman3(n_samples=100000) 
+    X, y = make_friedman1(n_samples=100000, noise=1.0)
+    # X, y = make_friedman2(n_samples=100000)
+    # X, y = make_friedman3(n_samples=100000)
     n, m = X.shape
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                            test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    models = {"bonsai-gbm": GBM(distribution="gaussian",
-                            n_estimators=100, 
-                            learning_rate=0.1,
-                            max_depth=3,
-                            subsample=0.7),
-            "sklearn": GradientBoostingRegressor(
-                        n_estimators=100, 
-                        learning_rate=0.1,
-                        max_depth=3, 
-                        subsample=0.7)}
+    models = {
+        "bonsai-gbm": GBM(
+            distribution="gaussian",
+            n_estimators=100,
+            learning_rate=0.1,
+            max_depth=3,
+            subsample=0.7,
+        ),
+        "sklearn": GradientBoostingRegressor(
+            n_estimators=100, learning_rate=0.1, max_depth=3, subsample=0.7
+        ),
+    }
 
     print("\n")
     print("# Test Regression")
     print("-----------------------------------------------------")
     print(" model_name     train_time     predict_time   rmse   ")
     print("-----------------------------------------------------")
-    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format(
-            "baseline", "-", "-", np.std(y_test)))
+    print(
+        " {0:12}   {1:12}   {2:12}   {3:.5f}".format(
+            "baseline", "-", "-", np.std(y_test)
+        )
+    )
 
     for name, model in models.items():
 
@@ -55,40 +59,44 @@ def test_regression():
         time_pred = time.time() - start
 
         # Error
-        rmse = np.sqrt(np.mean((y_test - y_hat)**2))
+        rmse = np.sqrt(np.mean((y_test - y_hat) ** 2))
 
-        print(" {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
-            name, time_fit, time_pred, rmse))
+        print(
+            " {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
+                name, time_fit, time_pred, rmse
+            )
+        )
 
     print("-----------------------------------------------------")
     print("\n")
 
+
 def test_classification():
 
-    X, y = make_hastie_10_2(n_samples=100000) 
-    y[y<0] = 0
+    X, y = make_hastie_10_2(n_samples=100000)
+    y[y < 0] = 0
     n, m = X.shape
-    X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                            test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    models = {"bonsai-gbm": GBM(distribution="bernoulli",
-                            n_estimators=10, 
-                            learning_rate=0.1,
-                            max_depth=3,
-                            subsample=0.7),
-            "sklearn": GradientBoostingClassifier(
-                        n_estimators=10, 
-                        learning_rate=0.1,
-                        max_depth=3, 
-                        subsample=0.7)}
+    models = {
+        "bonsai-gbm": GBM(
+            distribution="bernoulli",
+            n_estimators=10,
+            learning_rate=0.1,
+            max_depth=3,
+            subsample=0.7,
+        ),
+        "sklearn": GradientBoostingClassifier(
+            n_estimators=10, learning_rate=0.1, max_depth=3, subsample=0.7
+        ),
+    }
 
     print("\n")
     print("# Test Classification")
     print("-----------------------------------------------------")
     print(" model_name     train_time     predict_time   auc    ")
     print("-----------------------------------------------------")
-    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format(
-            "baseline", "-", "-", 0.5))
+    print(" {0:12}   {1:12}   {2:12}   {3:.5f}".format("baseline", "-", "-", 0.5))
 
     for name, model in models.items():
 
@@ -99,21 +107,23 @@ def test_classification():
 
         # Predict
         start = time.time()
-        y_hat = model.predict_proba(X_test)[:,1]
+        y_hat = model.predict_proba(X_test)[:, 1]
         time_pred = time.time() - start
 
         # Error
         auc = roc_auc_score(y_test, y_hat)
 
-        print(" {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
-            name, time_fit, time_pred, auc))
+        print(
+            " {0:12}   {1:.5f} sec    {2:.5f} sec    {3:.5f}".format(
+                name, time_fit, time_pred, auc
+            )
+        )
 
     print("-----------------------------------------------------")
     print("\n")
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     test_regression()
     test_classification()
-
