@@ -410,8 +410,55 @@ class Bonsai:
         return ratios
 
     # Randomize tree
-    def randomize_tree(self):
+    def randomize_tree(self, kind="swap"):
+        if kind in {"swap"}:
+            return self.swap_randomization()
+        elif kind in {"tunnel"}:
+            return self.tunnel_randomization()
+        else:
+            msg = """
+            Did not recognize randomization scheme: {}
+            """.format(kind)
+            ValueError(msg)
 
+    def tunnel_randomization(self):
+        if self.counts is None:
+            self.get_counts()
+            self.get_ratios()
+        tree = copy.deepcopy(self)
+        n, _ = tree.tree_ind.shape
+
+        # Filter leaves
+        internal_nodes = [node_idx for node_idx in range(n)
+                          if tree.tree_ind[node_idx][0] != 1]
+
+        l_ratios = tree.ratios[:, 0]
+        r_ratios = tree.ratios[:, 1]
+        relative_counts = tree.counts[:, 0]/tree.counts[0, 0]
+
+        l_random_samples = self.tunnel_distribution_samples(n)
+        r_random_samples = self.tunnel_distribution_samples(n)
+
+        for node_idx in internal_nodes:
+            l2r_tunnel = r_ratios[node_idx] * (1 - 0.5*relative_counts[node_idx])
+            r2l_tunnel = l_ratios[node_idx] * (1 - 0.5*relative_counts[node_idx])
+
+            l2r_tunnel = l_random_samples[node_idx] < l2r_tunnel
+            r2l_tunnel = r_random_samples[node_idx] < r2l_tunnel
+
+            if l2r_tunnel and r2l_tunnel:
+                # This is a swap
+                tree.tree_ind[node_idx] = tunnel(tree.tree_ind[node_idx], direction=-1)
+            elif l2r_tunnel:
+                tree.tree_ind[node_idx] = tunnel(tree.tree_ind[node_idx], direction=0)
+            elif r2l_tunnel:
+                tree.tree_ind[node_idx] = tunnel(tree.tree_ind[node_idx], direction=1)
+            else:
+                pass
+
+        return tree
+
+    def swap_randomization(self):
         if self.counts is None:
             self.get_counts()
             self.get_ratios()
@@ -428,7 +475,7 @@ class Bonsai:
         # Iterate over all nodes, swap if you must
         for node_idx in internal_nodes:
             s = random_samples[node_idx]
-            d = 0.5-l_ratios[node_idx]
+            d = 0.5 - l_ratios[node_idx]
             must_swap = np.abs(s) > np.abs(d)
 
             if must_swap:
@@ -462,7 +509,11 @@ class Bonsai:
             return self.count_samples_node(l_idx) + self.count_samples_node(r_idx)
 
     @staticmethod
-    def swap_distribution_samples(n, mu=0.5, sigma=0.05):
+    def swap_distribution_samples(n, mu=0., sigma=0.2):
         random_samples = np.random.normal(mu, sigma, n)
-        random_samples = np.round(random_samples, decimals=0)
+        #random_samples = np.round(random_samples, decimals=2)
         return random_samples
+
+    @staticmethod
+    def tunnel_distribution_samples(n):
+        return np.random.rand(n)
