@@ -11,6 +11,7 @@ import copy
 import numpy as np
 import json
 from scipy.special import expit
+from sklearn.neighbors import KernelDensity
 import time
 
 from bonsai.core._bonsaic import reorder, sketch, apply_tree
@@ -166,12 +167,40 @@ class Bonsai:
         return
 
     def predict(self, X, output_type="response"):
-        """Predict y by applying the trained tree to X."""
+        """
+        Predict y by applying the trained tree to X.
+
+        Args:
+            X:
+            output_type:    str, default="response"
+                            - response: Function yields predicted value
+                            - index:    Function yields indices of nodes.
+
+        Returns:
+
+        """
         X = X.astype(np.float)
         n, m = X.shape
         y = np.zeros(n, dtype=np.float)
         out = apply_tree(self.tree_ind, self.tree_val, X, y, output_type)
         return out
+
+    def predict_proba(self, X, y):
+
+        n, m = X.shape
+        out = np.zeros(n, dtype=np.float)
+
+        leaf_idxs = self.predict(X, output_type="index")
+
+        u_leaf_idxs = np.unique(leaf_idxs).astype(int)
+
+        for leaf_idx in u_leaf_idxs:
+            leaf_mask = leaf_idxs == leaf_idx
+            leaf_data = np.atleast_2d(y[leaf_mask]).T
+            print(y[leaf_mask].shape)
+            out[leaf_mask] = self.kdes[leaf_idx].score_samples(leaf_data)
+
+        return np.exp(out)
 
     # Fitting
     def split_branch(self, X, y, z, branch):
@@ -409,6 +438,48 @@ class Bonsai:
             self.ratios = ratios
         return ratios
 
+    def get_histograms(self, X, y, **kwargs):
+
+        contents_leaf = self.build_contents_leaf(X, y)
+
+        l = len(self.leaves)
+        histograms = [None for _ in range(l)]
+
+        for leaf_idx in range(l):
+            leaf_mask = contents_leaf[:, -1] == leaf_idx
+            leaf_data = contents_leaf[leaf_mask, :-1]
+            histograms[leaf_idx] = np.histogram(leaf_data, **kwargs)
+
+        self.histograms = histograms
+
+        return
+
+
+    def get_kdes(self, X, y, **kwargs):
+
+        contents_leaf = self.build_contents_leaf(X, y)
+
+        def scotts_factor(a):
+            n, m = a.shape
+
+            h = n**(-1./(m+4))
+            return h
+
+        l = len(self.leaves)
+        kdes = [None for _ in range(l)]
+
+        for leaf_idx in range(l):
+            leaf_mask = contents_leaf[:, -1] == leaf_idx
+            leaf_data = contents_leaf[leaf_mask, :-1]
+
+            # Dynamical bandwidth selection
+            bandwidth = scotts_factor(leaf_data)
+
+            kdes[leaf_idx] = KernelDensity(bandwidth=bandwidth, **kwargs).fit(leaf_data)
+
+        self.kdes = kdes
+        return
+
     # Randomize tree
     def randomize_tree(self, kind="swap"):
         if kind in {"swap"}:
@@ -507,6 +578,15 @@ class Bonsai:
             l_idx = tree_ind[node_idx][3]
             r_idx = tree_ind[node_idx][4]
             return self.count_samples_node(l_idx) + self.count_samples_node(r_idx)
+
+    def build_contents_leaf(self, X, y):
+        y = np.atleast_2d(y).T
+        n, m = y.shape
+
+        contents_leaf = np.zeros((n, m + 1))
+        contents_leaf[:, :m] = y[:, :]  # First m columns are ground truth contents
+        contents_leaf[:, -1] = self.predict(X, output_type="index")  # Last column is leaf index
+        return contents_leaf
 
     @staticmethod
     def swap_distribution_samples(n, mu=0., sigma=0.2):
